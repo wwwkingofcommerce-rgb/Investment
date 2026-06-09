@@ -3,113 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital Counter</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<title>Balance Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg-color: #f0f2f5;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --text-main: #2d3436;
+    --text-sub: #636e72;
+    --accent-primary: #0984e3; /* Professional Blue */
+    --accent-hover: #076bba;
+    --deduct-color: #e17055; /* Soft Orange/Red */
+    --shadow: 0 10px 30px rgba(0,0,0,0.05);
+  }
+
   body {
     margin: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #0b0c10;
+    background-color: var(--bg-color);
     background-image: 
-      linear-gradient(rgba(102, 252, 241, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(102, 252, 241, 0.05) 1px, transparent 1px);
-    background-size: 30px 30px;
-    font-family: 'Orbitron', sans-serif;
-    color: #c5c6c7;
+      radial-gradient(at 10% 10%, rgba(9, 132, 227, 0.05) 0px, transparent 50%),
+      radial-gradient(at 90% 90%, rgba(225, 112, 85, 0.05) 0px, transparent 50%);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
   }
-  .container {
-    background: rgba(31, 40, 51, 0.85);
-    padding: 50px;
-    border-radius: 20px;
-    border: 1px solid #45a29e;
-    box-shadow: 0 0 40px rgba(102, 252, 241, 0.15), inset 0 0 20px rgba(102, 252, 241, 0.05);
+
+  .wrapper {
     text-align: center;
-    backdrop-filter: blur(10px);
-    min-width: 350px;
   }
-  h2 {
-    font-size: 1.2rem;
-    letter-spacing: 3px;
-    color: #45a29e;
-    margin: 0 0 15px 0;
+
+  .app-card {
+    background: var(--card-bg);
+    padding: 40px 50px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+  }
+
+  .app-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .label-main {
+    font-size: 0.9rem;
+    font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-sub);
+    margin-bottom: 5px;
+    display: block;
   }
-  h1 {
+
+  .accumulated-amount {
     font-size: 4rem;
-    margin: 0 0 10px 0;
-    color: #66fcf1;
-    text-shadow: 0 0 20px rgba(102, 252, 241, 0.6);
+    font-weight: 600;
+    color: var(--accent-primary);
+    margin: 0;
+    line-height: 1;
+    font-variant-numeric: tabular-nums; /* Prevents text shaking */
   }
-  h3 {
-    font-size: 1.1rem;
-    color: #ff4c4c;
-    margin: 0 0 35px 0;
-    text-shadow: 0 0 10px rgba(255, 76, 76, 0.4);
+
+  .currency-symbol {
+    font-size: 2.5rem;
+    vertical-align: super;
+    margin-right: 5px;
+    font-weight: 300;
   }
-  .input-group {
+
+  .deducted-container {
+    margin-top: 10px;
+    margin-bottom: 40px;
+    padding: 8px 15px;
+    background: rgba(0,0,0,0.03);
+    border-radius: 50px;
+    display: inline-block;
+  }
+
+  .label-sub {
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    font-weight: 400;
+  }
+
+  .deducted-amount {
+    color: var(--deduct-color);
+    font-weight: 600;
+  }
+
+  .action-area {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     gap: 15px;
+    align-items: center;
   }
-  input {
-    background: #0b0c10;
-    border: 2px solid #45a29e;
-    color: #66fcf1;
-    padding: 15px;
-    font-size: 1.2rem;
-    border-radius: 10px;
-    outline: none;
-    font-family: 'Orbitron', sans-serif;
-    width: 140px;
-    text-align: center;
-    transition: box-shadow 0.3s ease;
+
+  .input-wrapper {
+    position: relative;
   }
-  input:focus {
-    box-shadow: 0 0 15px rgba(102, 252, 241, 0.5);
-  }
-  button {
-    background: #66fcf1;
+
+  input[type="number"] {
+    background: transparent;
     border: none;
-    color: #0b0c10;
-    font-weight: 700;
-    padding: 15px 30px;
+    border-bottom: 2px solid #dfe6e9;
+    color: var(--text-main);
+    padding: 10px;
     font-size: 1.2rem;
-    border-radius: 10px;
+    width: 150px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="number"]:focus {
+    border-color: var(--accent-primary);
+  }
+
+  /* Hide number input arrows */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  button {
+    background: var(--accent-primary);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px 40px;
+    font-size: 1rem;
+    border-radius: 50px;
     cursor: pointer;
-    text-transform: uppercase;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Poppins', sans-serif;
     transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(102, 252, 241, 0.3);
+    box-shadow: 0 4px 15px rgba(9, 132, 227, 0.2);
   }
+
   button:hover {
-    background: #45a29e;
-    color: #fff;
-    box-shadow: 0 0 25px rgba(102, 252, 241, 0.6);
-    transform: translateY(-2px);
+    background: var(--accent-hover);
+    box-shadow: 0 6px 20px rgba(9, 132, 227, 0.3);
   }
+
   button:active {
-    transform: translateY(1px);
+    transform: scale(0.97);
   }
+
 </style>
 </head>
 <body>
-<div class="container">
-  <h2>Live Balance</h2>
-  <h1>₹<span id="amount">0.000000</span></h1>
-  <h3>Deducted: ₹<span id="deducted">0.000000</span></h3>
-  <div class="input-group">
-    <input type="number" id="deductInput" step="0.01" value="0" />
-    <button onclick="deductAmount()">Deduct</button>
+
+<div class="wrapper">
+  <div class="app-card">
+    <span class="label-main">Current Balance</span>
+    <p class="accumulated-amount"><span class="currency-symbol">₹</span><span id="amount">0.000000</span></p>
+    
+    <div class="deducted-container">
+      <span class="label-sub">Total Removed: <span class="deducted-amount">₹<span id="deducted">0.000000</span></span></span>
+    </div>
+
+    <div class="action-area">
+      <div class="input-wrapper">
+        <input type="number" id="deductInput" step="1" placeholder="0" onfocus="this.placeholder = ''" onblur="this.placeholder = '0'"/>
+      </div>
+      <button onclick="deductAmount()">Deduct Funds</button>
+    </div>
   </div>
 </div>
+
 <script>
+  // Core Logic (Remains the same to ensure functionality)
   const startDate = new Date("2026-06-09T00:00:00").getTime();
   const ratePerMillisecond = 10 / (24 * 60 * 60 * 1000);
   
-  let totalDeducted = parseFloat(localStorage.getItem('totalDeducted')) || 0.0;
+  let totalDeducted = parseFloat(localStorage.getItem('clean_totalDeducted')) || 0.0;
   document.getElementById('deducted').innerText = totalDeducted.toFixed(6);
 
   function updateCounter() {
@@ -126,16 +200,19 @@
   }
 
   function deductAmount() {
-    const deductValue = parseFloat(document.getElementById('deductInput').value);
+    const deductInput = document.getElementById('deductInput');
+    const deductValue = parseFloat(deductInput.value);
     
     if (!isNaN(deductValue) && deductValue > 0) {
       totalDeducted += deductValue;
-      localStorage.setItem('totalDeducted', totalDeducted);
+      // Using a different localStorage key so old test data doesn't interfere with new look
+      localStorage.setItem('clean_totalDeducted', totalDeducted);
       document.getElementById('deducted').innerText = totalDeducted.toFixed(6);
-      document.getElementById('deductInput').value = 0;
+      deductInput.value = ''; // Clear input
     }
   }
 
+  // Start the counter
   updateCounter();
 </script>
 </body>
