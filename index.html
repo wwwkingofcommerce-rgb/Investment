@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Counter</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 50px;
+    background-color: #f4f4f9;
+  }
+  .container {
+    display: inline-block;
+    text-align: left;
+    padding: 30px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  h1 { color: #2e7d32; }
+  h3 { color: #d32f2f; }
+  input, button {
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  button {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #1565c0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Accumulated Amount</h2>
+  <h1>₹<span id="amount">0.000000</span></h1>
+  <h3>Total Deducted: ₹<span id="deducted">0.000000</span></h3>
+  <div style="margin-top: 20px;">
+    <input type="number" id="deductInput" step="0.01" value="0" />
+    <button onclick="deductAmount()">Deduct</button>
+  </div>
+</div>
+<script>
+  const startDate = new Date("2026-06-09T00:00:00").getTime();
+  const ratePerMillisecond = 10 / (24 * 60 * 60 * 1000);
+  
+  let totalDeducted = parseFloat(localStorage.getItem('totalDeducted')) || 0.0;
+  document.getElementById('deducted').innerText = totalDeducted.toFixed(6);
+
+  function updateCounter() {
+    const now = new Date().getTime();
+    const elapsedMilliseconds = now - startDate;
+    let currentAmount = (elapsedMilliseconds * ratePerMillisecond) - totalDeducted;
+    
+    if (currentAmount < 0) {
+      currentAmount = 0;
+    }
+    
+    document.getElementById("amount").innerText = currentAmount.toFixed(6);
+    requestAnimationFrame(updateCounter);
+  }
+
+  function deductAmount() {
+    const deductValue = parseFloat(document.getElementById('deductInput').value);
+    
+    if (!isNaN(deductValue) && deductValue > 0) {
+      totalDeducted += deductValue;
+      localStorage.setItem('totalDeducted', totalDeducted);
+      document.getElementById('deducted').innerText = totalDeducted.toFixed(6);
+      document.getElementById('deductInput').value = 0;
+    }
+  }
+
+  updateCounter();
+</script>
+</body>
+</html>
