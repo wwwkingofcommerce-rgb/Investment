@@ -11,9 +11,9 @@
     --card-bg: rgba(255, 255, 255, 0.8);
     --text-main: #2d3436;
     --text-sub: #636e72;
-    --accent-primary: #0984e3; /* Professional Blue */
+    --accent-primary: #0984e3;
     --accent-hover: #076bba;
-    --deduct-color: #e17055; /* Soft Orange/Red */
+    --deduct-color: #e17055;
     --shadow: 0 10px 30px rgba(0,0,0,0.05);
   }
 
@@ -42,7 +42,7 @@
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: var(--shadow);
-    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     transition: transform 0.3s ease;
   }
@@ -67,7 +67,7 @@
     color: var(--accent-primary);
     margin: 0;
     line-height: 1;
-    font-variant-numeric: tabular-nums; /* Prevents text shaking */
+    font-variant-numeric: tabular-nums;
   }
 
   .currency-symbol {
@@ -126,7 +126,6 @@
     border-color: var(--accent-primary);
   }
 
-  /* Hide number input arrows */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -179,7 +178,6 @@
 </div>
 
 <script>
-  // Core Logic (Remains the same to ensure functionality)
   const startDate = new Date("2026-06-09T00:00:00").getTime();
   const ratePerMillisecond = 10 / (24 * 60 * 60 * 1000);
   
@@ -191,10 +189,6 @@
     const elapsedMilliseconds = now - startDate;
     let currentAmount = (elapsedMilliseconds * ratePerMillisecond) - totalDeducted;
     
-    if (currentAmount < 0) {
-      currentAmount = 0;
-    }
-    
     document.getElementById("amount").innerText = currentAmount.toFixed(6);
     requestAnimationFrame(updateCounter);
   }
@@ -205,14 +199,12 @@
     
     if (!isNaN(deductValue) && deductValue > 0) {
       totalDeducted += deductValue;
-      // Using a different localStorage key so old test data doesn't interfere with new look
       localStorage.setItem('clean_totalDeducted', totalDeducted);
       document.getElementById('deducted').innerText = totalDeducted.toFixed(6);
-      deductInput.value = ''; // Clear input
+      deductInput.value = '';
     }
   }
 
-  // Start the counter
   updateCounter();
 </script>
 </body>
